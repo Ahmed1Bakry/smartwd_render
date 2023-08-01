@@ -2,7 +2,6 @@ import aiohttp
 import asyncio
 import uvicorn
 from fastai import *
-from fastai.vision import *
 from fastai.vision.all import *
 from io import BytesIO
 from starlette.applications import Starlette
@@ -65,7 +64,7 @@ async def homepage(request):
 async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
-    img = open_image(BytesIO(img_bytes))
+    img = Image.open(BytesIO(img_bytes))
     pred = learn.predict(img)
     prediction = "Unknown"
     if len(pred) > 0:
