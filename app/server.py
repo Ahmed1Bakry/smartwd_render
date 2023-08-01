@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import uvicorn
+import numpy as np
 from fastai import *
 from fastai.vision.all import *
 from io import BytesIO
@@ -65,7 +66,8 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = Image.open(BytesIO(img_bytes))
-    pred = learn.predict(img)
+    img = np.array(img)
+    pred,pred_idx,probs = learn.predict(img)
     prediction = "Unknown"
     if len(pred) > 0:
         prediction = pred[0]
