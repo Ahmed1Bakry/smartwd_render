@@ -9,10 +9,9 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-export_file_name = 'export.pkl'
-
-classes = ['black', 'grizzly', 'teddys']
+export_file_url = 'https://www.googleapis.com/drive/v3/files/1hHFSa1OacAck1iWloZEWowre2cwjeaaf?alt=media&key=AIzaSyCYGkKHllanXFFoNxZJ1jcjwpgBCVJWev8'
+export_file_name = 'model_v2.pkl'
+classes = ["T-Shirt","Longsleeve","Pants","Shoes","Shirt","Dress","Outwear","Shorts","Not_sure","Hat","Skirt","Polo","Undershirt","Blazer","Hoodie","Thawb","Body",'Other',"Top","Blouse","Skip"]
 path = Path(__file__).parent
 
 app = Starlette()
@@ -60,7 +59,10 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)[0]
+    pred = learn.predict(img)
+    prediction = "Unknown"
+    if len(pred) > 0:
+        prediction = pred[0]
     return JSONResponse({'result': str(prediction)})
 
 
