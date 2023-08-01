@@ -2,12 +2,19 @@ import aiohttp
 import asyncio
 import uvicorn
 from fastai import *
-from fastai.vision import *
+from fastai.vision.all import *
+from fastai.vision.widgets import *
 from io import BytesIO
 from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
+
+path = '/'
+def get_x(r): return path+'/images_original/'+r['image'] # create path to open images in the original folder
+def get_y(r): return r['label'].split('') # split the labels using space as a delimitter
+
+
 
 export_file_url = 'https://www.googleapis.com/drive/v3/files/1hHFSa1OacAck1iWloZEWowre2cwjeaaf?alt=media&key=AIzaSyCYGkKHllanXFFoNxZJ1jcjwpgBCVJWev8'
 export_file_name = 'model_v2.pkl'
