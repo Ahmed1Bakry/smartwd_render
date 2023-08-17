@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import uvicorn
 import numpy as np
+import cv2
 from fastai import *
 from fastai.vision.all import *
 from io import BytesIO
@@ -54,6 +55,23 @@ tasks = [asyncio.ensure_future(setup_learner())]
 learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
 loop.close()
 
+def rgb_to_hex(rgb):
+    return '%02x%02x%02x' % rgb
+def get_image_color(image):
+    img = cv2.cvtColor(np.array(image.convert('RGB')), cv2.COLOR_RGB2BGR)
+
+    height, width = img.shape[:2]
+    # Change these values to fit the size of your region of interest
+    roi_size = 10 # (10x10)
+    roi_values = img[(height-roi_size)//2:(height+roi_size)//2,(width-roi_size)//2:(width+roi_size)//2]
+    mean_blue = np.mean(roi_values[:,:,2])
+    mean_green = np.mean(roi_values[:,:,1])
+    mean_red = np.mean(roi_values[:,:,0])
+    
+    color = "#"+rgb_to_hex((int(mean_blue), int(mean_green), int(mean_red)))
+    
+    return color
+
 
 @app.route('/')
 async def homepage(request):
@@ -66,12 +84,13 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = Image.open(BytesIO(img_bytes))
+    color = get_image_color(img)
     img = np.array(img)
     pred,pred_idx,probs = learn.predict(img)
     prediction = "Unknown"
     if len(pred) > 0:
         prediction = pred[0]
-    return JSONResponse({'result': str(prediction)})
+    return JSONResponse({'result': str(prediction) , 'color' : str(color)})
 
 
 if __name__ == '__main__':
