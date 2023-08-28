@@ -13,13 +13,13 @@ from starlette.staticfiles import StaticFiles
 
 path = '/'
 def get_x(r): return path+'/images_original/'+r['image'] # create path to open images in the original folder
-def get_y(r): return r['label'].split('') # split the labels using space as a delimitter
+def get_y(r): return r['label']
 
 
 
-export_file_url = 'https://www.googleapis.com/drive/v3/files/1hHFSa1OacAck1iWloZEWowre2cwjeaaf?alt=media&key=AIzaSyCYGkKHllanXFFoNxZJ1jcjwpgBCVJWev8'
-export_file_name = 'model_v2.pkl'
-classes = ["T-Shirt","Longsleeve","Pants","Shoes","Shirt","Dress","Outwear","Shorts","Not_sure","Hat","Skirt","Polo","Undershirt","Blazer","Hoodie","Thawb","Body",'Other',"Top","Blouse","Skip"]
+export_file_url = 'https://www.googleapis.com/drive/v3/files/1LP9-fGM1K06hP-PW0Kma60YKyy0UC_zR?alt=media&key=AIzaSyCYGkKHllanXFFoNxZJ1jcjwpgBCVJWev8'
+export_file_name = 'model_v3.pkl'
+classes = ["T-Shirt","Longsleeve","Pants","Shirt","Dress","Outwear","Shorts","Not_sure","Hat","Skirt","Polo","Undershirt","Blazer","Hoodie","Thawb","Body","Top","Blouse"]
 path = Path(__file__).parent
 
 app = Starlette()
@@ -87,9 +87,7 @@ async def analyze(request):
     color = get_image_color(img)
     img = np.array(img)
     pred,pred_idx,probs = learn.predict(img)
-    prediction = "Unknown"
-    if len(pred) > 0:
-        prediction = pred[0]
+    prediction = pred
     return JSONResponse({'result': str(prediction) , 'color' : str(color)})
 
 
