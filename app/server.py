@@ -17,7 +17,7 @@ def get_y(r): return r['label']
 
 
 
-export_file_url = 'https://drive.google.com/uc?export=download&id=13JJNR8zRZjUzPWhkSrXywjR9YH0Vpl16'
+export_file_url = 'https://www.googleapis.com/drive/v3/files/13JJNR8zRZjUzPWhkSrXywjR9YH0Vpl16?alt=media&key=AIzaSyCYGkKHllanXFFoNxZJ1jcjwpgBCVJWev8'
 export_file_name = 'model_v4.pkl'
 classes = ["T-Shirt","Longsleeve","Pants","Shirt","Dress","Outwear","Shorts","Not_sure","Hat","Skirt","Polo","Undershirt","Blazer","Hoodie","Thawb","Body","Top","Blouse"]
 path = Path(__file__).parent
