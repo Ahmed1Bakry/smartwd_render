@@ -84,6 +84,7 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = Image.open(BytesIO(img_bytes))
+    img = img.convert("RGB")
     color = get_image_color(img)
     img = np.array(img)
     pred,pred_idx,probs = learn.predict(img)
