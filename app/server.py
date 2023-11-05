@@ -10,6 +10,7 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
+from PIL import Image, ImageOps
 
 path = '/'
 def get_x(r): return path+'/images_original/'+r['image'] # create path to open images in the original folder
@@ -85,6 +86,8 @@ async def analyze(request):
     img_bytes = await (img_data['file'].read())
     img = Image.open(BytesIO(img_bytes))
     img = img.convert("RGB")
+    img = ImageOps.exif_transpose(img)
+
     color = get_image_color(img)
     img = np.array(img)
     pred,pred_idx,probs = learn.predict(img)
